@@ -1,4 +1,4 @@
-In case if index pattern was deleted and you don't have a backup of it but you know its UNID.
+In case if a index pattern was deleted and you don't have a backup of it but you know its UNID.
 All commands for a console on Dev Tools page
 # 1. Create a new index pattern
 In UI you simple create a new index pattern with the same name as old one.
@@ -6,11 +6,11 @@ In UI you simple create a new index pattern with the same name as old one.
 Kibana stores all information in `.kibana` index (in OpenSearch it's alias and index has another name: `.kibana_1`)
 To manipulate with UNIDs we need the same index. So we just create a copy of the original index.
 ## 2.1 Get current settings of the index 
-execute following query 
+execute following query and remove all information about aliases and system information from settings part
 ```
   GET /.kibana_1
 ```
-and remove all information about aliases and system information from settings part and
+
 ## 2.2 Create a temporary index:
 ```
 PUT /kibana_copy
@@ -27,12 +27,11 @@ PUT /kibana_copy
     }
 }
 ```
-# 3. Assign old UNID to existed pattern
-_For example_ 
-value of old UNID: `1be0ac00-5811-11ec-9b2c-e3ede4a29610` and 
-value of new UNID: `9e5a4920-2283-11ec-96b4-c967034fbb6a`
 
-Value of UNID you cat take in two ways:
+# 3. Assign old UNID to existed pattern
+_For example_ value of old UNID: `1be0ac00-5811-11ec-9b2c-e3ede4a29610` and value of new UNID: `9e5a4920-2283-11ec-96b4-c967034fbb6a`
+
+Value of UNID you can take in two ways:
 * In UI 
 OpenSearch: _/app/management/opensearch-dashboards/indexPatterns_
 Kibana: _/app/kibana#/management/kibana/indices_
@@ -57,6 +56,7 @@ GET /.kibana_1/_doc/index-pattern:9e5a4920-2283-11ec-96b4-c967034fbb6a
 ```
 result will contains all information about requested index pattern
 ## 3.2 Copy the document to the temporary index
+You can't change `_id` field. It can be changed only during creation of a new document.
 ```
 POST _reindex
 {
